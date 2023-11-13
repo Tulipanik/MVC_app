@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="App">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/app/lib/angular.min.js"></script>
+    <script type="module" src="../Controller/ControlTable.js"></script>
+    <script type="module" src="../Controller/controlForms.js"></script>
+    <title>Books app</title>
+  </head>
+  <body>
+    <div id="to_float">
+      <div id="left">
+        <div>
+          <button data-bind="click: search('search_menu')">Wyszukiwanie</button>
+          <div id="search_menu">
+            <div ng-controller="getByGenreController">
+              <h3>Get by chosen genre</h3>
+              <form ng-submit="getByGenre()">
+                <label for="genre_find">Gatunek:</label>
+                <input
+                  type="text"
+                  name="genre_find"
+                  ng-model="genreData.genre"
+                  required
+                />
+                <button type="submit">Wyszukaj</button>
+                <div class="error" id="get_genre_error">
+                  Nie ma książki o takim gatunku
+                </div>
+              </form>
+            </div>
+            <div id="get_author_form">
+              <h3>Get by chosen author</h3>
+              <form data-bind="submit: getAllAuthor">
+                <label for="author_find">Autor:</label>
+                <input type="text" name="author_find" id="author_find" />
+                <button type="submit">Wyszukaj</button>
+                <div class="error" id="get_author_error">
+                  Nie ma książki z takim autorem
+                </div>
+              </form>
+            </div>
+            <div id="get_id_form">
+              <h3>Get by chosen id</h3>
+              <form data-bind="submit: getById">
+                <label for="id_find">Id:</label>
+                <input type="text" name="id_find" id="id_find" />
+                <button type="submit">Wyszukaj</button>
+                <div class="error" id="get_id_error">
+                  Nie ma książki o takim id
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <button data-bind="click: search('modify_menu')">Menu edycji</button>
+          <div id="modify_menu">
+            <div id="add_form">
+              <h3>Add book</h3>
+              <form id="add" data-bind="submit: addBook">
+                <label for="title">Tytuł:</label>
+                <input type="text" name="title" />
+                <label for="author">Autor:</label>
+                <input type="text" name="author" />
+                <label for="genre">Gatunek:</label>
+                <input type="text" name="genre" />
+                <button type="submit">Dodaj</button>
+                <div class="error" id="null_title">
+                  Tytuł nie może być pusty
+                </div>
+                <div class="error" id="not_added">
+                  Nie udało się dodać książki do bazy
+                </div>
+              </form>
+            </div>
+            <div id="update_form">
+              <h3>Update book</h3>
+              <form id="update" data-bind="submit: updateBook">
+                <label for="id">Id:</label>
+                <input type="text" name="id" />
+                <label for="title">Tytuł:</label>
+                <input type="text" name="title" />
+                <label for="author">Autor:</label>
+                <input type="text" name="author" />
+                <label for="genre">Gatunek:</label>
+                <input type="text" name="genre" />
+                <button type="submit">Aktualizuj</button>
+                <div class="error" id="null_id">
+                  Nie istnieje takie id w bazie
+                </div>
+                <div class="error" id="null_title_2">
+                  Tytuł nie może być pusty
+                </div>
+              </form>
+            </div>
+          </div>
+          <button data-bind="click: search('delete_menu')">Delete</button>
+          <div id="delete_menu">
+            <button data-bind="click: deleteAllBooks">
+              Usuń wszystkie książki
+            </button>
+            <div class="error" id="not_deleted">
+              Nie udało się usunąć wszystkich książek
+            </div>
+            <div id="delete_id_form">
+              <h3>Delete by chosen id</h3>
+              <form data-bind="submit: deleteId">
+                <label for="id">Id:</label>
+                <input type="text" name="id" id="id" />
+                <button type="submit">Usuń</button>
+                <div class="error" id="delete_id_error">
+                  Nie ma książki o takim id
+                </div>
+              </form>
+            </div>
+            <div id="delete_genre_form">
+              <h3>Delete by chosen genre</h3>
+              <form data-bind="submit: deleteAllGenre">
+                <label for="genre_delete">Gatunek:</label>
+                <input type="text" name="genre" id="genre_delete" />
+                <button type="submit">Usuń</button>
+                <div class="error" id="delete_genre_error">
+                  Nie ma książki o takim gatunku
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="right">
+        <table ng-controller="tableController">
+          <thead>
+            <td>Id</td>
+            <td>Tytuł</td>
+            <td>Autor</td>
+            <td>Gatunek</td>
+          </thead>
+          <tbody ng-repeat="book in books">
+            <td>{{book.id}}</td>
+            <td>{{book.title}}</td>
+            <td>{{book.name}}</td>
+            <td>{{book.genre}}</td>
+          </tbody>
+        </table>
+        <div ng-controller="pageSwappingController">
+          <button ng-click="back()">right</button>
+          <button ng-click="next()">left</button>
+        </div>
+      </div>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    </div>
+  </body>
+</html>
