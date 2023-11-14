@@ -4,6 +4,22 @@ export const app = angular.module("App", []);
 let page = 1;
 const perPage = 20;
 
+app.service("ErrorService", function ($rootScope) {
+  var error = "";
+
+  return {
+    getErrors: function () {
+      return error;
+    },
+    addError: function (message) {
+      error = message;
+    },
+    clearErrors: function () {
+      error = "";
+    },
+  };
+});
+
 app.service("sharedService", function ($rootScope) {
   this.reloadController = function (controllerName) {
     $rootScope.$broadcast("reloadController", {
@@ -40,7 +56,9 @@ app.controller(
     setData(dataService, sharedService);
 
     $rootScope.$on("reloadController", function (event, args) {
-      $scope.books = dataService.getBooks();
+      $scope.$apply(() => {
+        $scope.books = dataService.getBooks();
+      });
     });
   }
 );
@@ -60,6 +78,18 @@ app.controller(
     };
   }
 );
+
+app.controller("visibilityController", ($scope) => {
+  $scope.setVisibility = (name) => {
+    let element = document.getElementById(name);
+    let computedStyle = window.getComputedStyle(element);
+    if (computedStyle.display == "none") {
+      element.style.display = "block";
+    } else {
+      element.style.display = "none";
+    }
+  };
+});
 
 export function setData(dataService, sharedService) {
   api
