@@ -13,14 +13,14 @@
       <div id="left">
         <div>
           <button data-bind="click: search('search_menu')">Wyszukiwanie</button>
-          <div id="search_menu">
-            <div ng-controller="getByGenreController">
+          <div ng-controller="getController">
+            <div>
               <h3>Get by chosen genre</h3>
               <form ng-submit="getByGenre()">
                 <label for="genre_find">Gatunek:</label>
                 <input
                   type="text"
-                  name="genre_find"
+                  id="genre_find"
                   ng-model="genreData.genre"
                   required
                 />
@@ -32,9 +32,13 @@
             </div>
             <div id="get_author_form">
               <h3>Get by chosen author</h3>
-              <form data-bind="submit: getAllAuthor">
+              <form ng-submit="getByAuthor()">
                 <label for="author_find">Autor:</label>
-                <input type="text" name="author_find" id="author_find" />
+                <input
+                  type="text"
+                  id="author_find"
+                  ng-model="authorData.author"
+                />
                 <button type="submit">Wyszukaj</button>
                 <div class="error" id="get_author_error">
                   Nie ma książki z takim autorem
@@ -43,9 +47,9 @@
             </div>
             <div id="get_id_form">
               <h3>Get by chosen id</h3>
-              <form data-bind="submit: getById">
+              <form ng-submit="getById()">
                 <label for="id_find">Id:</label>
-                <input type="text" name="id_find" id="id_find" />
+                <input type="text" id="id_find" ng-model="idData.id" />
                 <button type="submit">Wyszukaj</button>
                 <div class="error" id="get_id_error">
                   Nie ma książki o takim id
@@ -55,16 +59,16 @@
           </div>
 
           <button data-bind="click: search('modify_menu')">Menu edycji</button>
-          <div id="modify_menu">
+          <div ng-controller="addController">
             <div id="add_form">
               <h3>Add book</h3>
-              <form id="add" data-bind="submit: addBook">
+              <form id="add" ng-submit="addBook()">
                 <label for="title">Tytuł:</label>
-                <input type="text" name="title" />
+                <input type="text" id="title" ng-model="bookToAdd.title" />
                 <label for="author">Autor:</label>
-                <input type="text" name="author" />
+                <input type="text" id="author" ng-model="bookToAdd.author" />
                 <label for="genre">Gatunek:</label>
-                <input type="text" name="genre" />
+                <input type="text" id="genre" ng-model="bookToAdd.genre" />
                 <button type="submit">Dodaj</button>
                 <div class="error" id="null_title">
                   Tytuł nie może być pusty
@@ -76,15 +80,19 @@
             </div>
             <div id="update_form">
               <h3>Update book</h3>
-              <form id="update" data-bind="submit: updateBook">
+              <form id="update" ng-submit="updateBook()">
                 <label for="id">Id:</label>
-                <input type="text" name="id" />
+                <input type="number" name="id" ng-model="bookToUpdate.id" />
                 <label for="title">Tytuł:</label>
-                <input type="text" name="title" />
+                <input type="text" name="title" ng-model="bookToUpdate.title" />
                 <label for="author">Autor:</label>
-                <input type="text" name="author" />
+                <input
+                  type="text"
+                  name="author"
+                  ng-model="bookToUpdate.author"
+                />
                 <label for="genre">Gatunek:</label>
-                <input type="text" name="genre" />
+                <input type="text" name="genre" ng-model="bookToUpdate.genre" />
                 <button type="submit">Aktualizuj</button>
                 <div class="error" id="null_id">
                   Nie istnieje takie id w bazie
@@ -96,18 +104,16 @@
             </div>
           </div>
           <button data-bind="click: search('delete_menu')">Delete</button>
-          <div id="delete_menu">
-            <button data-bind="click: deleteAllBooks">
-              Usuń wszystkie książki
-            </button>
+          <div id="delete_menu" ng-controller="deleteController">
+            <button ng-click="deleteAllBooks()">Usuń wszystkie książki</button>
             <div class="error" id="not_deleted">
               Nie udało się usunąć wszystkich książek
             </div>
             <div id="delete_id_form">
               <h3>Delete by chosen id</h3>
-              <form data-bind="submit: deleteId">
+              <form ng-submit="deleteById()">
                 <label for="id">Id:</label>
-                <input type="text" name="id" id="id" />
+                <input type="text" name="id" id="id" ng-model="bookId" />
                 <button type="submit">Usuń</button>
                 <div class="error" id="delete_id_error">
                   Nie ma książki o takim id
@@ -116,9 +122,14 @@
             </div>
             <div id="delete_genre_form">
               <h3>Delete by chosen genre</h3>
-              <form data-bind="submit: deleteAllGenre">
+              <form ng-submit="deleteByGenre()">
                 <label for="genre_delete">Gatunek:</label>
-                <input type="text" name="genre" id="genre_delete" />
+                <input
+                  type="text"
+                  name="genre"
+                  id="genre_delete"
+                  ng-model="bookGenre"
+                />
                 <button type="submit">Usuń</button>
                 <div class="error" id="delete_genre_error">
                   Nie ma książki o takim gatunku
@@ -140,7 +151,7 @@
           <tbody ng-repeat="book in books">
             <td>{{book.id}}</td>
             <td>{{book.title}}</td>
-            <td>{{book.name}}</td>
+            <td>{{book.author}}</td>
             <td>{{book.genre}}</td>
           </tbody>
         </table>
@@ -149,7 +160,6 @@
           <button ng-click="next()">left</button>
         </div>
       </div>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     </div>
   </body>
 </html>

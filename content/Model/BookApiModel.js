@@ -67,8 +67,8 @@ async function getMaxId() {
   const endpoint = `${URLName}getMaxId`;
 
   try {
-    const Books = await getAPIRequest(endpoint, {});
-    const maxId = Books[0];
+    const maxId = (await getAPIRequest(endpoint, {})).max;
+    console.log(maxId);
     return maxId;
   } catch (error) {
     console.error("Error fetching books:", error);
@@ -104,6 +104,7 @@ async function update(book) {
     },
     body: JSON.stringify(book),
   };
+  console.log(endpoint);
 
   try {
     const message = await getAPIRequest(endpoint, method);
@@ -157,7 +158,7 @@ async function deleteGenre(genre) {
   }
 }
 
-export default {
+export {
   getAllBooks,
   getAllAuthor,
   getAllGenre,
