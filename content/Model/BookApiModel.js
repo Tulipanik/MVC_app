@@ -1,8 +1,15 @@
-import { BookModel } from "./BookModel.js";
+import { TokenService } from "./LoginApiModel.js";
 
-const URLName = " http://localhost:8080/";
+export const URL = "http://localhost:8080/";
 
-async function getAPIRequest(endpoint, metadata) {
+export async function getAPIRequest(endpoint, token, metadata = {}) {
+  if (token !== "" && !metadata.method) {
+    metadata = {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    };
+  }
   return fetch(endpoint, metadata).then((res) => {
     if (res.ok) {
       return res.json();
@@ -12,161 +19,155 @@ async function getAPIRequest(endpoint, metadata) {
   });
 }
 
-async function getAllBooks(page, perPage) {
-  const endpoint = `${URLName}getAllBooks?perpage=${perPage}&page=${page}`;
+export async function getAllBooks(page, perPage) {
+  const token = await TokenService.getToken();
+  const endpoint = `${URL}getAllBooks?perpage=${perPage}&page=${page}`;
+
   try {
-    const Books = await getAPIRequest(endpoint, {});
-    const books = Books.map((book) => new BookModel(book));
-    return books;
-  } catch (error) {
-    console.error("Error fetching books:", error);
-    throw error;
+    const response = await getAPIRequest(endpoint, token);
+    return response;
+  } catch (err) {
+    return;
   }
 }
 
-async function getAllGenre(genre) {
-  const endpoint = `${URLName}getBookByGenre/${genre}`;
+export async function getAllGenre(genre) {
+  const token = await TokenService.getToken();
+  const endpoint = `${URL}getBookByGenre/${genre}`;
 
   try {
-    const Books = await getAPIRequest(endpoint, {});
-    const books = Books.map((book) => new BookModel(book));
-    return books;
-  } catch (error) {
-    console.error("Error fetching books:", error);
-    throw error;
+    const response = await getAPIRequest(endpoint, token);
+    return response;
+  } catch (err) {
+    return;
   }
 }
 
-async function getAllAuthor(author) {
-  const endpoint = `${URLName}getBookByAuthor/${author}`;
+export async function getAllAuthor(author) {
+  const token = await TokenService.getToken();
+  const endpoint = `${URL}getBookByAuthor/${author}`;
 
   try {
-    const Books = await getAPIRequest(endpoint, {});
-    const books = Books.map((book) => new BookModel(book));
-    return books;
-  } catch (error) {
-    console.error("Error fetching books:", error);
-    throw error;
+    const response = await getAPIRequest(endpoint, token);
+    return response;
+  } catch (err) {
+    return;
   }
 }
 
-async function getById(id) {
-  const endpoint = `${URLName}getBookById/${id}`;
+export async function getById(id) {
+  const token = await TokenService.getToken();
+  const endpoint = `${URL}getBookById/${id}`;
 
   try {
-    const Books = await getAPIRequest(endpoint, {});
-    const books = Books.map((book) => new BookModel(book));
-    return books;
-  } catch (error) {
-    console.error("Error fetching books:", error);
-    throw error;
+    const response = await getAPIRequest(endpoint, token);
+    return response;
+  } catch (err) {
+    return;
   }
 }
 
-async function getMaxId() {
-  const endpoint = `${URLName}getMaxId`;
+export async function getMaxId() {
+  const token = await TokenService.getToken();
+  const endpoint = `${URL}getMaxId`;
 
   try {
-    const maxId = (await getAPIRequest(endpoint, {})).max;
-    console.log(maxId);
-    return maxId;
-  } catch (error) {
-    console.error("Error fetching books:", error);
-    throw error;
+    const response = await getAPIRequest(endpoint, token);
+    return response;
+  } catch (err) {
+    return;
   }
 }
 
-async function add(book) {
-  const endpoint = `${URLName}addBook`;
-  const method = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(book),
-  };
+export async function add(book) {
+  const token = await TokenService.getToken();
+  const endpoint = `${URL}addBook`;
 
   try {
-    const message = await getAPIRequest(endpoint, method);
-    return message;
+    const response = await getAPIRequest(endpoint, token, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(book),
+    });
+    return response;
   } catch (error) {
-    console.error("Error fetching books:", error);
-    throw error;
+    return;
   }
 }
 
-async function update(book) {
-  const endpoint = `${URLName}updateBook/${book.id}`;
-  const method = {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(book),
-  };
-  console.log(endpoint);
+export async function update(book) {
+  const token = await TokenService.getToken();
+  const endpoint = `${URL}updateBook/${book.id}`;
 
   try {
-    const message = await getAPIRequest(endpoint, method);
-    return message;
+    const response = await getAPIRequest(endpoint, token, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(book),
+    });
+    return response;
   } catch (error) {
-    console.error("Error fetching books:", error);
-    throw error;
+    return;
   }
 }
 
-async function deleteAll() {
-  const endpoint = `${URLName}deleteAllBooks`;
-  const method = { method: "DELETE" };
+export async function deleteAll() {
+  const token = await TokenService.getToken();
+  const endpointDailyForecast = `${URL}deleteAllBooks`;
+  console.log("siema");
 
   try {
-    const message = await getAPIRequest(endpoint, method);
-    return message;
-  } catch (error) {
-    console.error("Error fetching books:", error);
-    throw error;
+    const response = await getAPIRequest(endpointDailyForecast, token, {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return response;
+  } catch (err) {
+    return;
   }
 }
 
-async function deleteId(id) {
+export async function deleteId(id) {
   if (id == "") {
     id = 0;
   }
-
-  const endpoint = `${URLName}deleteBookById/${id}`;
-  const method = { method: "DELETE" };
+  const token = await TokenService.getToken();
+  const endpoint = `${URL}deleteBookById/${id}`;
 
   try {
-    const message = await getAPIRequest(endpoint, method);
-    return message;
-  } catch (error) {
-    console.error("Error fetching books:", error);
-    throw error;
+    const response = await getAPIRequest(endpoint, token, {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return response;
+  } catch (err) {
+    return;
   }
 }
 
-async function deleteGenre(genre) {
-  const endpoint = `${URLName}/deleteAllBooksByGenre/${genre}`;
-  const method = { method: "DELETE" };
+export async function deleteGenre(genre) {
+  const token = await TokenService.getToken();
+  const endpointDailyForecast = `${URL}/deleteAllBooksByGenre/${genre}`;
 
   try {
-    const message = await getAPIRequest(endpoint, method);
-    return message;
-  } catch (error) {
-    console.error("Error fetching books:", error);
-    throw error;
+    const response = await getAPIRequest(endpointDailyForecast, token, {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return response;
+  } catch (err) {
+    return;
   }
 }
-
-export {
-  getAllBooks,
-  getAllAuthor,
-  getAllGenre,
-  getById,
-  getMaxId,
-  add,
-  update,
-  deleteAll,
-  deleteGenre,
-  deleteId,
-};
